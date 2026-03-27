@@ -33,6 +33,7 @@ export default function Dashboard() {
   const [user, setUser] = useState<User | null>(null);
   const [plots, setPlots] = useState<Plot[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     // Extract token from URL if present (after Google OAuth redirect)
@@ -51,8 +52,8 @@ export default function Dashboard() {
         return r.json();
       })
       .then(setUser)
-      .catch(() => {
-        window.location.href = "/";
+      .catch((err) => {
+        setError(`Auth failed: ${err.message}`);
       });
 
     // Load plots
@@ -72,6 +73,18 @@ export default function Dashboard() {
     return (
       <div className="min-h-screen bg-gray-950 flex items-center justify-center text-white">
         Loading...
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gray-950 flex items-center justify-center text-white px-4">
+        <div className="bg-red-900 border border-red-700 rounded-xl p-6 max-w-lg w-full">
+          <p className="font-bold mb-2">Login error</p>
+          <p className="text-sm text-red-200 font-mono break-all">{error}</p>
+          <a href="/" className="mt-4 inline-block text-sm underline text-red-300">Go back</a>
+        </div>
       </div>
     );
   }
