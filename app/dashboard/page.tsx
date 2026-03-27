@@ -39,11 +39,12 @@ export default function Dashboard() {
     // Extract token from URL if present (after Google OAuth redirect)
     const params = new URLSearchParams(window.location.search);
     const token = params.get("token");
+    console.log("[dashboard] URL token found:", !!token, "| URL:", window.location.href);
     if (token) {
       localStorage.setItem("skydeed_token", token);
-      // Clean token from URL
       window.history.replaceState({}, "", "/dashboard");
     }
+    console.log("[dashboard] localStorage token:", localStorage.getItem("skydeed_token")?.slice(0, 20) + "...");
 
     // Load user info
     authFetch(`${API_URL}/auth/me`)
@@ -83,6 +84,7 @@ export default function Dashboard() {
         <div className="bg-red-900 border border-red-700 rounded-xl p-6 max-w-lg w-full">
           <p className="font-bold mb-2">Login error</p>
           <p className="text-sm text-red-200 font-mono break-all">{error}</p>
+          <p className="text-xs text-red-300 mt-2">Token in storage: {typeof window !== "undefined" ? (localStorage.getItem("skydeed_token") ? "YES ✓" : "NO ✗") : "?"}</p>
           <a href="/" className="mt-4 inline-block text-sm underline text-red-300">Go back</a>
         </div>
       </div>
