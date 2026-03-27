@@ -18,13 +18,34 @@ interface Plot {
   is_active: boolean;
 }
 
+function authFetch(url: string, options: RequestInit = {}) {
+  const token = localStorage.getItem("skydeed_token");
+  return fetch(url, {
+    ...options,
+    headers: {
+      ...(options.headers || {}),
+      ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    },
+  });
+}
+
 export default function Dashboard() {
   const [user, setUser] = useState<User | null>(null);
   const [plots, setPlots] = useState<Plot[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(`${API_URL}/auth/me`, { credentials: "include" })
+    // Extract token from URL if present (after Google OAuth redirect)
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get("token");
+    if (token) {
+      localStorage.setItem("skydeed_token", token);
+      // Clean token from URL
+      window.history.replaceState({}, "", "/dashboard");
+    }
+
+    // Load user info
+    authFetch(`${API_URL}/auth/me`)
       .then((r) => {
         if (!r.ok) throw new Error("Not logged in");
         return r.json();
@@ -34,15 +55,16 @@ export default function Dashboard() {
         window.location.href = "/";
       });
 
-    fetch(`${API_URL}/plots/`, { credentials: "include" })
+    // Load plots
+    authFetch(`${API_URL}/plots/`)
       .then((r) => r.json())
       .then(setPlots)
       .catch(() => setPlots([]))
       .finally(() => setLoading(false));
   }, []);
 
-  const handleLogout = async () => {
-    await fetch(`${API_URL}/auth/logout`, { method: "POST", credentials: "include" });
+  const handleLogout = () => {
+    localStorage.removeItem("skydeed_token");
     window.location.href = "/";
   };
 
@@ -79,8 +101,7 @@ export default function Dashboard() {
           <p className="text-gray-400 mt-1">Your satellite land monitoring dashboard</p>
         </div>
 
-        {/* Plots */}
-        <div className="mb-6 flex items-center justify-between">
+        <div className="mb-6">
           <h3 className="text-lg font-semibold">Your Plots</h3>
         </div>
 
