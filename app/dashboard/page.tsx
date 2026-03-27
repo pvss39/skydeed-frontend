@@ -95,6 +95,12 @@ export default function Dashboard() {
         <h1 className="text-xl font-bold text-green-400">SkyDeed</h1>
         {user && (
           <div className="flex items-center gap-4">
+            <a
+              href="/pricing"
+              className="text-sm bg-green-900 hover:bg-green-800 text-green-300 px-3 py-1 rounded-lg transition-colors"
+            >
+              Upgrade
+            </a>
             <span className="text-gray-400 text-sm">{user.email}</span>
             <button
               onClick={handleLogout}
