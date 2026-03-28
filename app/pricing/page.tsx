@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Navbar from "../../components/Navbar";
 
 const API_URL =
   process.env.NEXT_PUBLIC_API_URL ||
@@ -43,7 +44,6 @@ export default function Pricing() {
       .then(setPlans)
       .finally(() => setLoading(false));
 
-    // Load Razorpay SDK
     const script = document.createElement("script");
     script.src = "https://checkout.razorpay.com/v1/checkout.js";
     script.async = true;
@@ -87,7 +87,7 @@ export default function Pricing() {
           name: order.user_name,
           email: order.user_email,
         },
-        theme: { color: "#22c55e" },
+        theme: { color: "#c9a84c" },
         handler: function () {
           setMessage(
             "Payment successful! Your plan will be activated within a minute."
@@ -115,36 +115,49 @@ export default function Pricing() {
   const planOrder = ["starter", "farmer", "pro"];
 
   return (
-    <div className="min-h-screen bg-gray-950 text-white">
-      <nav className="bg-gray-900 border-b border-gray-800 px-6 py-4 flex items-center justify-between">
-        <a href="/dashboard" className="text-xl font-bold text-green-400">
-          SkyDeed
-        </a>
-        <a
-          href="/dashboard"
-          className="text-sm text-gray-400 hover:text-white transition-colors"
-        >
-          Back to Dashboard
-        </a>
-      </nav>
+    <div className="min-h-screen" style={{ background: "var(--navy-900)" }}>
+      <Navbar />
 
-      <div className="max-w-5xl mx-auto px-6 py-12">
-        <div className="text-center mb-12">
-          <h1 className="text-3xl font-bold mb-3">Choose your plan</h1>
-          <p className="text-gray-400">
-            Start monitoring your land today. All plans include real Sentinel-2
-            satellite imagery.
+      <div className="max-w-5xl mx-auto px-5 py-16">
+        {/* Header */}
+        <div className="text-center mb-14">
+          <p
+            className="text-xs font-medium mb-3 tracking-widest uppercase"
+            style={{ color: "var(--gold-600)", fontFamily: "var(--font-dm-mono)" }}
+          >
+            Pricing
+          </p>
+          <h1
+            className="text-4xl md:text-5xl font-bold mb-4"
+            style={{ fontFamily: "var(--font-cormorant)" }}
+          >
+            Choose your monitoring plan
+          </h1>
+          <p className="max-w-xl mx-auto text-sm" style={{ color: "var(--text-secondary)" }}>
+            Every plan includes real Sentinel-2 satellite imagery, Telegram
+            alerts, and PDF evidence reports.
           </p>
         </div>
 
+        {/* Success / error message */}
         {message && (
-          <div className="mb-8 bg-green-900 border border-green-700 rounded-xl p-4 text-center text-green-200">
+          <div
+            className="mb-10 rounded-xl p-4 text-center text-sm font-medium"
+            style={{
+              background: "rgba(201,168,76,0.1)",
+              border: "1px solid var(--border-hover)",
+              color: "var(--gold-400)",
+            }}
+          >
             {message}
           </div>
         )}
 
+        {/* Plan cards */}
         {loading ? (
-          <div className="text-center text-gray-400">Loading plans...</div>
+          <div className="text-center text-sm" style={{ color: "var(--text-secondary)" }}>
+            Loading plans…
+          </div>
         ) : (
           <div className="grid md:grid-cols-3 gap-6">
             {planOrder.map((key, i) => {
@@ -155,68 +168,85 @@ export default function Pricing() {
               return (
                 <div
                   key={key}
-                  className={`relative rounded-2xl p-6 border flex flex-col ${
-                    isPopular
-                      ? "bg-green-950 border-green-600"
-                      : "bg-gray-900 border-gray-800"
-                  }`}
+                  className="relative rounded-2xl p-7 flex flex-col transition-transform hover:-translate-y-0.5"
+                  style={{
+                    background: isPopular ? "var(--navy-700)" : "var(--navy-800)",
+                    border: `1px solid ${isPopular ? "var(--border-hover)" : "var(--border)"}`,
+                    boxShadow: isPopular ? "0 0 32px rgba(201,168,76,0.08)" : "none",
+                  }}
                 >
                   {isPopular && (
-                    <div className="absolute -top-3 left-1/2 -translate-x-1/2">
-                      <span className="bg-green-500 text-black text-xs font-bold px-3 py-1 rounded-full">
+                    <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
+                      <span
+                        className="text-xs font-bold px-3 py-1 rounded-full"
+                        style={{
+                          background: "linear-gradient(135deg, var(--gold-600), var(--gold-500))",
+                          color: "var(--navy-900)",
+                          fontFamily: "var(--font-dm-mono)",
+                          letterSpacing: "0.08em",
+                        }}
+                      >
                         POPULAR
                       </span>
                     </div>
                   )}
 
+                  {/* Plan header */}
                   <div className="mb-6">
-                    <h2 className="text-lg font-bold">{plan.name}</h2>
-                    <div className="mt-3 flex items-end gap-1">
-                      <span className="text-3xl font-bold">
+                    <p
+                      className="text-xs font-medium mb-1 tracking-widest uppercase"
+                      style={{ color: "var(--gold-700)", fontFamily: "var(--font-dm-mono)" }}
+                    >
+                      {plan.name}
+                    </p>
+                    <div className="flex items-end gap-1 mt-3">
+                      <span
+                        className="text-4xl font-bold"
+                        style={{ fontFamily: "var(--font-cormorant)", color: isPopular ? "var(--gold-400)" : "var(--text-primary)" }}
+                      >
                         ₹{plan.price_inr}
                       </span>
-                      <span className="text-gray-400 text-sm mb-1">/month</span>
+                      <span className="text-sm mb-1.5" style={{ color: "var(--text-muted)" }}>/month</span>
                     </div>
-                    <p className="text-gray-400 text-sm mt-2">
+                    <p className="text-sm mt-2 leading-relaxed" style={{ color: "var(--text-secondary)" }}>
                       {plan.description}
                     </p>
                   </div>
 
-                  <ul className="space-y-2 mb-8 flex-1">
-                    <li className="flex items-center gap-2 text-sm">
-                      <span className="text-green-400">✓</span>
-                      <span>
-                        {plan.plots} plot{plan.plots > 1 ? "s" : ""}
-                      </span>
-                    </li>
-                    <li className="flex items-center gap-2 text-sm">
-                      <span className="text-green-400">✓</span>
-                      <span>Scan every {plan.scan_days} days</span>
-                    </li>
-                    <li className="flex items-center gap-2 text-sm">
-                      <span className="text-green-400">✓</span>
-                      <span>Telegram alerts</span>
-                    </li>
-                    <li className="flex items-center gap-2 text-sm">
-                      <span className="text-green-400">✓</span>
-                      <span>PDF evidence reports</span>
-                    </li>
-                    <li className="flex items-center gap-2 text-sm">
-                      <span className="text-green-400">✓</span>
-                      <span>Real Sentinel-2 imagery</span>
-                    </li>
+                  {/* Features */}
+                  <ul className="flex flex-col gap-2.5 mb-8 flex-1">
+                    {[
+                      `${plan.plots} plot${plan.plots > 1 ? "s" : ""}`,
+                      `Scan every ${plan.scan_days} days`,
+                      "Telegram alerts",
+                      "PDF evidence reports",
+                      "Real Sentinel-2 imagery",
+                    ].map((feat) => (
+                      <li key={feat} className="flex items-center gap-2.5 text-sm">
+                        <span style={{ color: "var(--gold-600)" }}>✓</span>
+                        <span style={{ color: "var(--text-secondary)" }}>{feat}</span>
+                      </li>
+                    ))}
                   </ul>
 
                   <button
                     onClick={() => handleUpgrade(key)}
                     disabled={paying === key}
-                    className={`w-full py-3 rounded-xl font-semibold text-sm transition-colors ${
+                    className="w-full py-3 rounded-xl font-semibold text-sm transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
+                    style={
                       isPopular
-                        ? "bg-green-500 hover:bg-green-400 text-black"
-                        : "bg-gray-800 hover:bg-gray-700 text-white"
-                    } disabled:opacity-50 disabled:cursor-not-allowed`}
+                        ? {
+                            background: "linear-gradient(135deg, var(--gold-600), var(--gold-500))",
+                            color: "var(--navy-900)",
+                          }
+                        : {
+                            background: "transparent",
+                            color: "var(--gold)",
+                            border: "1px solid var(--gold)",
+                          }
+                    }
                   >
-                    {paying === key ? "Opening payment..." : "Get started"}
+                    {paying === key ? "Opening payment…" : "Get started"}
                   </button>
                 </div>
               );
@@ -224,8 +254,8 @@ export default function Pricing() {
           </div>
         )}
 
-        <p className="text-center text-gray-500 text-xs mt-8">
-          Payments secured by Razorpay. Cancel anytime.
+        <p className="text-center text-xs mt-10" style={{ color: "var(--text-muted)", fontFamily: "var(--font-dm-mono)" }}>
+          Payments secured by Razorpay · Cancel anytime
         </p>
       </div>
     </div>

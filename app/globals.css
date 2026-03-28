@@ -1,26 +1,86 @@
 @import "tailwindcss";
 
+/* ── Design tokens ─────────────────────────────────────────── */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Navy scale */
+  --navy-950: #060c1a;
+  --navy-900: #0a0f1e;
+  --navy-800: #0d1526;
+  --navy-700: #111d35;
+  --navy-600: #1a2a4a;
+  --navy-500: #243356;
+
+  /* Gold scale */
+  --gold-300: #f0d98a;
+  --gold-400: #e8c97a;
+  --gold-500: #d4b866;
+  --gold-600: #c9a84c;
+  --gold-700: #b8963a;
+
+  /* Semantic */
+  --bg:           var(--navy-900);
+  --bg-card:      var(--navy-800);
+  --bg-elevated:  var(--navy-700);
+  --border:       rgba(201, 168, 76, 0.18);
+  --border-hover: rgba(201, 168, 76, 0.42);
+
+  --text-primary:   #f0ead6;
+  --text-secondary: #a89b7e;
+  --text-muted:     #5f5645;
+
+  --gold: var(--gold-600);
+  --gold-light: var(--gold-400);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+/* ── Base ──────────────────────────────────────────────────── */
+html { scroll-behavior: smooth; }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--navy-900);
+  color: var(--text-primary);
+  font-family: 'DM Sans', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3 {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  letter-spacing: -0.01em;
+}
+
+/* Gold gradient text utility */
+.text-gold-gradient {
+  background: linear-gradient(135deg, var(--gold-400) 0%, var(--gold-600) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Card base */
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+}
+
+/* Gold button */
+.btn-gold {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: linear-gradient(135deg, var(--gold-600) 0%, var(--gold-500) 100%);
+  color: var(--navy-900);
+  font-weight: 700;
+  padding: 0.75rem 2rem;
+  border-radius: 2px;
+  transition: opacity 0.15s, transform 0.15s;
+  font-family: 'DM Sans', sans-serif;
+  letter-spacing: 0.02em;
+  font-size: 0.9rem;
+}
+.btn-gold:hover { opacity: 0.9; transform: translateY(-1px); }
+
+/* Subtle divider */
+.divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border-hover), transparent);
 }
