@@ -173,6 +173,26 @@ export default function Home() {
             See pricing →
           </a>
         </div>
+
+        {/* Trust line */}
+        <div
+          className="flex items-center justify-center gap-2 mt-8"
+          style={{ fontFamily: "var(--font-dm-mono)", fontSize: "12px", color: C.textMuted }}
+        >
+          <span style={{ color: C.gold, fontSize: "16px" }}>●</span>
+          Plots currently being monitored across AP &amp; Telangana
+          <span
+            style={{
+              background: `linear-gradient(135deg, ${C.gold}, ${C.goldLight})`,
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+              fontWeight: 700,
+              fontSize: "13px",
+            }}
+          >
+            · Live
+          </span>
+        </div>
       </section>
 
       {/* ── Divider ─────────────────────────────────────────────── */}
@@ -180,23 +200,50 @@ export default function Home() {
 
       {/* ── Stats bar ───────────────────────────────────────────── */}
       <section style={{ background: C.bgCard }}>
-        <div className="max-w-6xl mx-auto px-5 py-10 grid grid-cols-2 md:grid-cols-4 gap-8">
-          {stats.map((s) => (
-            <div key={s.label} className="text-center">
-              <p
-                className="text-3xl font-bold mb-1"
-                style={{ fontFamily: "var(--font-cormorant)", color: C.gold }}
+        <div className="max-w-5xl mx-auto px-5 py-14">
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(4, 1fr)",
+              gap: 0,
+            }}
+            className="grid-cols-2 md:grid-cols-4"
+          >
+            {stats.map((s, i) => (
+              <div
+                key={s.label}
+                style={{
+                  textAlign: "center",
+                  padding: "0 24px",
+                  borderRight: i < stats.length - 1 ? `1px solid ${C.border}` : "none",
+                }}
               >
-                {s.value}
-              </p>
-              <p
-                className="text-xs"
-                style={{ color: C.textMuted, fontFamily: "var(--font-dm-mono)" }}
-              >
-                {s.label}
-              </p>
-            </div>
-          ))}
+                <p
+                  style={{
+                    fontFamily: "var(--font-cormorant)",
+                    fontSize: "clamp(2rem, 4vw, 3rem)",
+                    fontWeight: 700,
+                    color: C.gold,
+                    lineHeight: 1,
+                    marginBottom: "10px",
+                  }}
+                >
+                  {s.value}
+                </p>
+                <p
+                  style={{
+                    fontFamily: "var(--font-dm-mono)",
+                    fontSize: "11px",
+                    letterSpacing: "0.08em",
+                    color: C.textMuted,
+                    textTransform: "uppercase",
+                  }}
+                >
+                  {s.label}
+                </p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
