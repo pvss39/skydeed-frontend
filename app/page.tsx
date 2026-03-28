@@ -30,7 +30,7 @@ const steps = [
   {
     num: "04",
     title: "You get the alert",
-    body: "A message arrives on Telegram with before/after images and a PDF you can show to authorities or a lawyer.",
+    body: "A message reaches you wherever you are in the world — with before/after images and a PDF you can forward to family or a lawyer back home.",
   },
 ];
 
@@ -113,7 +113,7 @@ export default function Home() {
             className="w-1.5 h-1.5 rounded-full animate-pulse"
             style={{ background: C.gold }}
           />
-          Land protection for Indian property owners
+          For Indians living abroad with land back home
         </div>
 
         <h1
@@ -136,9 +136,9 @@ export default function Home() {
           className="text-lg md:text-xl max-w-2xl mx-auto mb-10 leading-relaxed"
           style={{ color: C.textSub }}
         >
-          We monitor your property from above and send you an instant alert
-          the moment we spot encroachment, construction, or any change — with
-          evidence you can use in court.
+          You are thousands of miles away. We make sure someone is always
+          watching your land back home — and the moment anything changes,
+          you know about it with evidence in hand.
         </p>
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
@@ -268,7 +268,7 @@ export default function Home() {
           className="text-4xl md:text-5xl font-bold mb-4"
           style={{ fontFamily: "var(--font-cormorant)", color: "#f0e8d4" }}
         >
-          Your land deserves{" "}
+          You&apos;re in another country.{" "}
           <span
             style={{
               background: `linear-gradient(135deg, ${C.gold}, ${C.goldLight})`,
@@ -276,12 +276,12 @@ export default function Home() {
               WebkitTextFillColor: "transparent",
             }}
           >
-            someone watching over it
+            We are watching your land.
           </span>
         </h2>
         <p className="mb-8 max-w-xl mx-auto text-sm leading-relaxed" style={{ color: "#a89070" }}>
-          Join landowners across Andhra Pradesh who now know the moment
-          anything changes on their property.
+          Someone starts building on your plot in Vizag. You find out in 5 days —
+          not 5 years. That is what SkyDeed does for NRIs.
         </p>
         <a
           href={`${API_URL}/auth/google/login`}
