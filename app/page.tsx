@@ -5,156 +5,218 @@ const API_URL =
   "https://skydeedexperiment-production.up.railway.app";
 
 const stats = [
-  { value: "5-day", label: "Scan frequency" },
-  { value: "10m", label: "Sentinel-2 resolution" },
-  { value: "100%", label: "Real imagery, no AI fakes" },
-  { value: "PDF", label: "Legal evidence reports" },
+  { value: "Every 5 days", label: "Your land is scanned" },
+  { value: "Instant", label: "Alerts on your phone" },
+  { value: "24 / 7", label: "Always watching" },
+  { value: "PDF", label: "Legal evidence ready" },
 ];
 
 const steps = [
   {
     num: "01",
-    title: "Register your plot",
-    body: "Send GPS coordinates to our Telegram bot. We convert them into a monitoring polygon on Sentinel-2 imagery.",
+    title: "Add your plot",
+    body: "Share the location of your land with us. Takes under a minute — no technical knowledge needed.",
   },
   {
     num: "02",
-    title: "We baseline the land",
-    body: "We capture the first satellite image as a baseline — NDVI vegetation index + true-colour RGB.",
+    title: "We record how it looks today",
+    body: "We take an aerial snapshot of your land and save it as the reference. This is what 'normal' looks like.",
   },
   {
     num: "03",
-    title: "Automated scans run",
-    body: "Every few days we compare new imagery against the baseline. Any change above threshold triggers an alert.",
+    title: "We keep watching",
+    body: "Every few days we check again. If anything looks different — construction, clearing, encroachment — we catch it.",
   },
   {
     num: "04",
-    title: "You receive the alert",
-    body: "Get a Telegram message with before/after satellite images and a downloadable PDF evidence report.",
+    title: "You get the alert",
+    body: "A message arrives on Telegram with before/after images and a PDF you can show to authorities or a lawyer.",
   },
 ];
 
+const C = {
+  bg: "#faf6f0",
+  bgCard: "#f2ebe0",
+  bgDark: "#1c1408",
+  border: "rgba(160,120,40,0.18)",
+  borderHover: "rgba(160,120,40,0.38)",
+  text: "#1c1408",
+  textSub: "#5c4e38",
+  textMuted: "#9e8a6e",
+  gold: "#b8903a",
+  goldLight: "#d4aa58",
+};
+
 export default function Home() {
   return (
-    <div style={{ background: "var(--navy-900)", color: "var(--text-primary)" }}>
-      {/* ── Nav ───────────────────────────────────────────────── */}
+    <div style={{ background: C.bg, color: C.text }}>
+
+      {/* ── Nav ─────────────────────────────────────────────────── */}
       <nav
-        style={{ borderBottom: "1px solid var(--border)", background: "var(--navy-950)" }}
-        className="sticky top-0 z-50"
+        style={{
+          borderBottom: `1px solid ${C.border}`,
+          background: C.bg,
+          position: "sticky",
+          top: 0,
+          zIndex: 50,
+        }}
       >
-        <div className="max-w-6xl mx-auto px-5 h-14 flex items-center justify-between">
+        <div
+          className="max-w-6xl mx-auto px-5 h-14 flex items-center justify-between"
+        >
           <div className="flex items-center gap-2">
             <SatelliteLogo size={26} />
             <span
               className="text-xl font-bold"
-              style={{ fontFamily: "var(--font-cormorant)", color: "var(--gold-400)" }}
+              style={{ fontFamily: "var(--font-cormorant)", color: C.gold }}
             >
               SkyDeed
             </span>
           </div>
           <a
             href={`${API_URL}/auth/google/login`}
-            className="text-sm font-semibold px-4 py-2 rounded-lg transition-opacity hover:opacity-80"
-            style={{ background: "var(--navy-700)", color: "var(--gold-400)", border: "1px solid var(--border)" }}
+            className="text-sm font-semibold px-4 py-2 transition-opacity hover:opacity-75"
+            style={{
+              background: C.bgDark,
+              color: "#f0e8d4",
+              borderRadius: "2px",
+              textDecoration: "none",
+            }}
           >
             Sign in
           </a>
         </div>
       </nav>
 
-      {/* ── Hero ──────────────────────────────────────────────── */}
+      {/* ── Hero ────────────────────────────────────────────────── */}
       <section
-        className="max-w-6xl mx-auto px-5 text-center"
-        style={{ minHeight: "100vh", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center" }}
+        className="max-w-5xl mx-auto px-5 text-center"
+        style={{
+          minHeight: "100vh",
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
       >
+        {/* Badge */}
         <div
           className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium mb-8"
           style={{
-            background: "rgba(201,168,76,0.08)",
-            border: "1px solid var(--border)",
-            color: "var(--gold-500)",
+            background: "rgba(184,144,58,0.08)",
+            border: `1px solid ${C.border}`,
+            color: C.gold,
             fontFamily: "var(--font-dm-mono)",
           }}
         >
           <span
             className="w-1.5 h-1.5 rounded-full animate-pulse"
-            style={{ background: "var(--gold-500)" }}
+            style={{ background: C.gold }}
           />
-          Powered by ESA Sentinel-2 satellite constellation
+          Land protection for Indian property owners
         </div>
 
         <h1
           className="text-5xl md:text-7xl font-bold leading-tight mb-6"
-          style={{ fontFamily: "var(--font-cormorant)" }}
+          style={{ fontFamily: "var(--font-cormorant)", color: C.text }}
         >
-          Guard your land{" "}
-          <span className="text-gold-gradient">from orbit</span>
+          Know the moment something{" "}
+          <span
+            style={{
+              background: `linear-gradient(135deg, ${C.gold}, ${C.goldLight})`,
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+            }}
+          >
+            changes on your land
+          </span>
         </h1>
 
         <p
           className="text-lg md:text-xl max-w-2xl mx-auto mb-10 leading-relaxed"
-          style={{ color: "var(--text-secondary)" }}
+          style={{ color: C.textSub }}
         >
-          Real Sentinel-2 satellite imagery scanned every few days. Instant
-          Telegram alerts when encroachment, construction, or vegetation loss is
-          detected on your land.
+          We monitor your property from above and send you an instant alert
+          the moment we spot encroachment, construction, or any change — with
+          evidence you can use in court.
         </p>
 
         <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
-          <a href={`${API_URL}/auth/google/login`} className="btn-gold text-base px-8 py-3">
+          <a
+            href={`${API_URL}/auth/google/login`}
+            className="inline-flex items-center gap-2 text-base font-bold px-8 py-3"
+            style={{
+              background: `linear-gradient(135deg, ${C.gold}, ${C.goldLight})`,
+              color: "#fff",
+              borderRadius: "2px",
+              textDecoration: "none",
+            }}
+          >
             <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
               <path d="M17.64 9.205c0-.639-.057-1.252-.164-1.841H9v3.481h4.844a4.14 4.14 0 01-1.796 2.716v2.259h2.908c1.702-1.567 2.684-3.875 2.684-6.615z" fill="#4285F4"/>
               <path d="M9 18c2.43 0 4.467-.806 5.956-2.18l-2.908-2.259c-.806.54-1.837.86-3.048.86-2.344 0-4.328-1.584-5.036-3.711H.957v2.332A8.997 8.997 0 009 18z" fill="#34A853"/>
               <path d="M3.964 10.71A5.41 5.41 0 013.682 9c0-.593.102-1.17.282-1.71V4.958H.957A8.996 8.996 0 000 9c0 1.452.348 2.827.957 4.042l3.007-2.332z" fill="#FBBC05"/>
               <path d="M9 3.58c1.321 0 2.508.454 3.44 1.345l2.582-2.58C13.463.891 11.426 0 9 0A8.997 8.997 0 00.957 4.958L3.964 7.29C4.672 5.163 6.656 3.58 9 3.58z" fill="#EA4335"/>
             </svg>
-            Start monitoring free
+            Start for free
           </a>
           <a
             href="/pricing"
-            className="text-sm font-semibold px-6 py-3 rounded-lg transition-colors"
-            style={{ color: "var(--text-secondary)", border: "1px solid var(--border)" }}
+            className="text-sm font-semibold px-6 py-3 transition-colors"
+            style={{
+              color: C.textSub,
+              border: `1px solid ${C.border}`,
+              borderRadius: "2px",
+              textDecoration: "none",
+            }}
           >
-            View plans →
+            See pricing →
           </a>
         </div>
       </section>
 
-      {/* ── Stats bar ─────────────────────────────────────────── */}
-      <div className="divider" />
-      <section style={{ background: "var(--navy-950)" }}>
-        <div className="max-w-6xl mx-auto px-5 py-8 grid grid-cols-2 md:grid-cols-4 gap-6">
+      {/* ── Divider ─────────────────────────────────────────────── */}
+      <div style={{ height: "1px", background: `linear-gradient(90deg, transparent, ${C.borderHover}, transparent)` }} />
+
+      {/* ── Stats bar ───────────────────────────────────────────── */}
+      <section style={{ background: C.bgCard }}>
+        <div className="max-w-6xl mx-auto px-5 py-10 grid grid-cols-2 md:grid-cols-4 gap-8">
           {stats.map((s) => (
             <div key={s.label} className="text-center">
               <p
                 className="text-3xl font-bold mb-1"
-                style={{ fontFamily: "var(--font-cormorant)", color: "var(--gold-400)" }}
+                style={{ fontFamily: "var(--font-cormorant)", color: C.gold }}
               >
                 {s.value}
               </p>
-              <p className="text-xs" style={{ color: "var(--text-secondary)", fontFamily: "var(--font-dm-mono)" }}>
+              <p
+                className="text-xs"
+                style={{ color: C.textMuted, fontFamily: "var(--font-dm-mono)" }}
+              >
                 {s.label}
               </p>
             </div>
           ))}
         </div>
       </section>
-      <div className="divider" />
 
-      {/* ── How it works ──────────────────────────────────────── */}
+      {/* ── Divider ─────────────────────────────────────────────── */}
+      <div style={{ height: "1px", background: `linear-gradient(90deg, transparent, ${C.borderHover}, transparent)` }} />
+
+      {/* ── How it works ────────────────────────────────────────── */}
       <section className="max-w-6xl mx-auto px-5 py-24">
         <div className="text-center mb-14">
           <p
             className="text-xs font-medium mb-3 tracking-widest uppercase"
-            style={{ color: "var(--gold-600)", fontFamily: "var(--font-dm-mono)" }}
+            style={{ color: C.gold, fontFamily: "var(--font-dm-mono)" }}
           >
             How it works
           </p>
           <h2
             className="text-4xl md:text-5xl font-bold"
-            style={{ fontFamily: "var(--font-cormorant)" }}
+            style={{ fontFamily: "var(--font-cormorant)", color: C.text }}
           >
-            Four steps to satellite protection
+            Simple protection, powerful results
           </h2>
         </div>
 
@@ -162,20 +224,30 @@ export default function Home() {
           {steps.map((step) => (
             <div
               key={step.num}
-              className="card p-7 flex gap-5 items-start hover:border-gold-600 transition-colors"
-              style={{ borderColor: "var(--border)" }}
+              style={{
+                background: C.bgCard,
+                border: `1px solid ${C.border}`,
+                borderRadius: "4px",
+                padding: "28px",
+                display: "flex",
+                gap: "20px",
+                alignItems: "flex-start",
+              }}
             >
               <span
                 className="text-3xl font-bold shrink-0"
-                style={{ fontFamily: "var(--font-cormorant)", color: "var(--gold-700)" }}
+                style={{ fontFamily: "var(--font-cormorant)", color: C.goldLight }}
               >
                 {step.num}
               </span>
               <div>
-                <h3 className="text-xl font-semibold mb-2" style={{ fontFamily: "var(--font-cormorant)" }}>
+                <h3
+                  className="text-xl font-semibold mb-2"
+                  style={{ fontFamily: "var(--font-cormorant)", color: C.text }}
+                >
                   {step.title}
                 </h3>
-                <p className="text-sm leading-relaxed" style={{ color: "var(--text-secondary)" }}>
+                <p className="text-sm leading-relaxed" style={{ color: C.textSub }}>
                   {step.body}
                 </p>
               </div>
@@ -184,45 +256,70 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── CTA banner ────────────────────────────────────────── */}
+      {/* ── CTA banner ──────────────────────────────────────────── */}
       <section
-        className="mx-4 md:mx-auto max-w-5xl rounded-2xl px-8 py-14 text-center mb-20"
+        className="mx-4 md:mx-auto max-w-5xl px-8 py-16 text-center mb-20"
         style={{
-          background: "linear-gradient(135deg, var(--navy-700) 0%, var(--navy-600) 100%)",
-          border: "1px solid var(--border-hover)",
+          background: C.bgDark,
+          borderRadius: "4px",
         }}
       >
         <h2
           className="text-4xl md:text-5xl font-bold mb-4"
-          style={{ fontFamily: "var(--font-cormorant)" }}
+          style={{ fontFamily: "var(--font-cormorant)", color: "#f0e8d4" }}
         >
           Your land deserves{" "}
-          <span className="text-gold-gradient">eyes in space</span>
+          <span
+            style={{
+              background: `linear-gradient(135deg, ${C.gold}, ${C.goldLight})`,
+              WebkitBackgroundClip: "text",
+              WebkitTextFillColor: "transparent",
+            }}
+          >
+            someone watching over it
+          </span>
         </h2>
-        <p className="mb-8 max-w-xl mx-auto" style={{ color: "var(--text-secondary)" }}>
-          Join landowners monitoring plots across Andhra Pradesh with real
-          Copernicus satellite data.
+        <p className="mb-8 max-w-xl mx-auto text-sm leading-relaxed" style={{ color: "#a89070" }}>
+          Join landowners across Andhra Pradesh who now know the moment
+          anything changes on their property.
         </p>
-        <a href={`${API_URL}/auth/google/login`} className="btn-gold text-base">
+        <a
+          href={`${API_URL}/auth/google/login`}
+          className="inline-block text-base font-bold px-8 py-3"
+          style={{
+            background: `linear-gradient(135deg, ${C.gold}, ${C.goldLight})`,
+            color: "#fff",
+            borderRadius: "2px",
+            textDecoration: "none",
+          }}
+        >
           Get started — it&apos;s free
         </a>
       </section>
 
-      {/* ── Footer ────────────────────────────────────────────── */}
+      {/* ── Footer ──────────────────────────────────────────────── */}
       <footer
-        className="border-t"
-        style={{ borderColor: "var(--border)", background: "var(--navy-950)" }}
+        style={{
+          borderTop: `1px solid ${C.border}`,
+          background: C.bgCard,
+        }}
       >
-        <div className="max-w-6xl mx-auto px-5 py-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs"
-          style={{ color: "var(--text-muted)" }}
+        <div
+          className="max-w-6xl mx-auto px-5 py-8 flex flex-col md:flex-row items-center justify-between gap-4 text-xs"
+          style={{ color: C.textMuted }}
         >
           <div className="flex items-center gap-2">
             <SatelliteLogo size={18} />
-            <span>SkyDeed — Satellite Land Monitoring</span>
+            <span style={{ fontFamily: "var(--font-dm-mono)" }}>
+              SkyDeed — Land Monitoring
+            </span>
           </div>
-          <p>Imagery from ESA Copernicus Sentinel-2 via Google Earth Engine.</p>
+          <p style={{ fontFamily: "var(--font-dm-mono)" }}>
+            © {new Date().getFullYear()} SkyDeed · All rights reserved
+          </p>
         </div>
       </footer>
+
     </div>
   );
 }
