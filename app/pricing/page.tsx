@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Navbar from "../../components/Navbar";
+import { handleStripeCheckout } from "../../lib/stripeCheckout";
 
 const API_URL =
   process.env.NEXT_PUBLIC_API_URL ||
@@ -32,11 +33,25 @@ declare global {
   }
 }
 
+const USD_PRICES: Record<string, { amount: string; priceId: string }> = {
+  starter: { amount: "$6", priceId: process.env.NEXT_PUBLIC_STRIPE_STARTER_ID! },
+  farmer:  { amount: "$12", priceId: process.env.NEXT_PUBLIC_STRIPE_FARMER_ID! },
+  pro:     { amount: "$29", priceId: process.env.NEXT_PUBLIC_STRIPE_PRO_ID! },
+};
+
 export default function Pricing() {
   const [plans, setPlans] = useState<Record<string, Plan>>({});
   const [loading, setLoading] = useState(true);
   const [paying, setPaying] = useState<string | null>(null);
   const [message, setMessage] = useState("");
+  const [currency, setCurrency] = useState<"usd" | "inr">(() => {
+    try {
+      const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      return tz.startsWith("America") ? "usd" : "inr";
+    } catch {
+      return "inr";
+    }
+  });
 
   useEffect(() => {
     fetch(`${API_URL}/payments/plans`)
@@ -119,6 +134,44 @@ export default function Pricing() {
       <Navbar />
 
       <div className="max-w-5xl mx-auto px-5 py-16">
+        {/* Currency toggle */}
+        <div className="flex justify-center mb-10">
+          <div
+            style={{
+              display: "inline-flex",
+              background: "var(--navy-800)",
+              border: "1px solid var(--border)",
+              borderRadius: "4px",
+              padding: "4px",
+              gap: "4px",
+            }}
+          >
+            {(["inr", "usd"] as const).map((c) => (
+              <button
+                key={c}
+                onClick={() => setCurrency(c)}
+                style={{
+                  fontFamily: "var(--font-dm-mono)",
+                  fontSize: "12px",
+                  fontWeight: 600,
+                  letterSpacing: "0.08em",
+                  padding: "6px 20px",
+                  borderRadius: "2px",
+                  border: "none",
+                  cursor: "pointer",
+                  transition: "background 0.15s, color 0.15s",
+                  background: currency === c
+                    ? "linear-gradient(135deg, var(--gold-600), var(--gold-500))"
+                    : "transparent",
+                  color: currency === c ? "var(--navy-900)" : "var(--text-secondary)",
+                }}
+              >
+                {c === "inr" ? "₹ INR" : "$ USD"}
+              </button>
+            ))}
+          </div>
+        </div>
+
         {/* Header */}
         <div className="text-center mb-14">
           <p
@@ -204,9 +257,9 @@ export default function Pricing() {
                         className="text-4xl font-bold"
                         style={{ fontFamily: "var(--font-cormorant)", color: isPopular ? "var(--gold-400)" : "var(--text-primary)" }}
                       >
-                        ₹{plan.price_inr}
+                        $49
                       </span>
-                      <span className="text-sm mb-1.5" style={{ color: "var(--text-muted)" }}>/month</span>
+                      <span className="text-sm mb-1.5" style={{ color: "var(--text-muted)" }}>/year</span>
                     </div>
                     <p className="text-sm mt-2 leading-relaxed" style={{ color: "var(--text-secondary)" }}>
                       {plan.description}
@@ -230,7 +283,20 @@ export default function Pricing() {
                   </ul>
 
                   <button
-                    onClick={() => handleUpgrade(key)}
+                    onClick={async () => {
+                      if (currency === "usd") {
+                        setPaying(key);
+                        try {
+                          await handleStripeCheckout(USD_PRICES[key].priceId);
+                        } catch {
+                          setMessage("Something went wrong. Please try again.");
+                        } finally {
+                          setPaying(null);
+                        }
+                      } else {
+                        handleUpgrade(key);
+                      }
+                    }}
                     disabled={paying === key}
                     className="w-full py-3 rounded-xl font-semibold text-sm transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
                     style={
@@ -255,7 +321,7 @@ export default function Pricing() {
         )}
 
         <p className="text-center text-xs mt-10" style={{ color: "var(--text-muted)", fontFamily: "var(--font-dm-mono)" }}>
-          Payments secured by Razorpay · Cancel anytime
+          {currency === "usd" ? "Payments secured by Stripe" : "Payments secured by Razorpay"} · Cancel anytime
         </p>
       </div>
     </div>

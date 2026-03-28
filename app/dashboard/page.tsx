@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import SatelliteLogo from "../../components/SatelliteLogo";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || "https://skydeedexperiment-production.up.railway.app";
@@ -91,6 +92,7 @@ function NavItem({ href, label, active }: { href: string; label: string; active?
 // ── Main component ────────────────────────────────────────────
 
 export default function Dashboard() {
+  const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
   const [plots, setPlots] = useState<Plot[]>([]);
   const [loading, setLoading] = useState(true);
@@ -99,9 +101,10 @@ export default function Dashboard() {
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
-    const token = params.get("token");
-    if (token) {
-      localStorage.setItem("skydeed_token", token);
+    const urlToken = params.get("token");
+    const freshLogin = Boolean(urlToken);
+    if (urlToken) {
+      localStorage.setItem("skydeed_token", urlToken);
       window.history.replaceState({}, "", "/dashboard");
     }
 
@@ -117,10 +120,15 @@ export default function Dashboard() {
 
     authFetch(`${API_URL}/plots/`)
       .then((r) => r.json())
-      .then(setPlots)
+      .then((data: Plot[]) => {
+        setPlots(data);
+        if (freshLogin && data.length === 0) {
+          router.push("/onboarding");
+        }
+      })
       .catch(() => setPlots([]))
       .finally(() => setLoading(false));
-  }, []);
+  }, [router]);
 
   const handleLogout = () => {
     localStorage.removeItem("skydeed_token");
