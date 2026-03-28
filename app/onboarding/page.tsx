@@ -523,8 +523,6 @@ export default function Onboarding() {
               We use this to send your satellite alerts.
             </p>
 
-            <Field label="Full Name" value={name} disabled />
-            <Field label="Email" value={email} disabled />
             <Field
               label="WhatsApp / Phone Number"
               value={phone}
