@@ -1,5 +1,16 @@
 import SatelliteLogo from "../components/SatelliteLogo";
 
+const MAPBOX_TOKEN = process.env.NEXT_PUBLIC_MAPBOX_TOKEN;
+
+// Test location: Amaravati, Andhra Pradesh
+const DEMO_LON = 80.5033;
+const DEMO_LAT = 16.5150;
+
+function mapboxSatUrl(lon: number, lat: number, zoom: number, w: number, h: number) {
+  const pin = `pin-l+b8903a(${lon},${lat})`;
+  return `https://api.mapbox.com/styles/v1/mapbox/satellite-v9/static/${pin}/${lon},${lat},${zoom},0/${w}x${h}@2x?access_token=${MAPBOX_TOKEN}`;
+}
+
 const API_URL =
   process.env.NEXT_PUBLIC_API_URL ||
   "https://skydeedexperiment-production.up.railway.app";
@@ -243,6 +254,100 @@ export default function Home() {
                 </p>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Divider ─────────────────────────────────────────────── */}
+      <div style={{ height: "1px", background: `linear-gradient(90deg, transparent, ${C.borderHover}, transparent)` }} />
+
+      {/* ── Satellite Map ───────────────────────────────────────── */}
+      <section
+        style={{ background: C.bgDark }}
+        className="py-20 px-5"
+      >
+        <div className="max-w-5xl mx-auto">
+          {/* heading */}
+          <div className="text-center mb-10">
+            <p
+              className="text-xs font-medium mb-3 tracking-widest uppercase"
+              style={{ color: C.gold, fontFamily: "var(--font-dm-mono)" }}
+            >
+              Andhra Pradesh &amp; Telangana
+            </p>
+            <h2
+              className="text-4xl md:text-5xl font-bold mb-4"
+              style={{ fontFamily: "var(--font-cormorant)", color: "#f0e8d4" }}
+            >
+              Real land. Real monitoring.
+            </h2>
+            <p
+              className="text-sm max-w-xl mx-auto leading-relaxed"
+              style={{ color: "#a89070" }}
+            >
+              This is actual satellite imagery of a plot we monitor in Amaravati, AP —
+              the same view our system checks every 5 days for any change.
+            </p>
+          </div>
+
+          {/* map image */}
+          <div
+            style={{
+              position: "relative",
+              borderRadius: "4px",
+              overflow: "hidden",
+              border: `1px solid rgba(184,144,58,0.25)`,
+              boxShadow: "0 0 60px rgba(184,144,58,0.08)",
+            }}
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={mapboxSatUrl(DEMO_LON, DEMO_LAT, 14, 1200, 520)}
+              alt="Satellite view of monitored land in Andhra Pradesh"
+              width={1200}
+              height={520}
+              style={{ width: "100%", height: "auto", display: "block" }}
+            />
+
+            {/* overlay badge */}
+            <div
+              style={{
+                position: "absolute",
+                bottom: "16px",
+                left: "16px",
+                background: "rgba(28,20,8,0.85)",
+                border: `1px solid rgba(184,144,58,0.35)`,
+                borderRadius: "3px",
+                padding: "8px 14px",
+                fontFamily: "var(--font-dm-mono)",
+                fontSize: "11px",
+                color: C.gold,
+                display: "flex",
+                alignItems: "center",
+                gap: "8px",
+                backdropFilter: "blur(6px)",
+              }}
+            >
+              <span
+                className="w-1.5 h-1.5 rounded-full animate-pulse"
+                style={{ background: C.gold, flexShrink: 0 }}
+              />
+              Amaravati, Andhra Pradesh · Plot under monitoring
+            </div>
+
+            {/* Mapbox attribution */}
+            <div
+              style={{
+                position: "absolute",
+                bottom: "6px",
+                right: "8px",
+                fontSize: "10px",
+                color: "rgba(255,255,255,0.45)",
+                fontFamily: "var(--font-dm-mono)",
+              }}
+            >
+              © Mapbox © OpenStreetMap
+            </div>
           </div>
         </div>
       </section>
